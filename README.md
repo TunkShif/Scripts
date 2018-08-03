@@ -11,6 +11,16 @@ Usage: `dir=/path/to/your/wallpaper/folder`
 
 Specify the wallpaper directory in the script
 
+#### img-upload
+
+Requirements: `curl xclip`
+
+Usage: `img-upload img.png`
+
+Upload an image to [Simple Free Image Hosting](https://sm.ms/) and copy url to clipboard
+
+---
+
 ### Python
 
 ##### todo
