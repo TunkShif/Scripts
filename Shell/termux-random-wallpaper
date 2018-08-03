@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-dir="$HOME/Pictures/Screenshots"
+dir=""
 
 files=()
 j=0
@@ -12,20 +12,20 @@ get_files() {
     done
 }
 
-get_rand(){
-    min=$1
-    max=$(($2-$min+1))
-    num=$(date +%s%N)
-    rand_int=$(($num%$max+$min))
-    return $rand_int
-}
-
+# have no idea why this doesn't work in termux
+# get_rand(){
+#     min=$1
+#     max=$(($2-$min+1))
+#     num=$(date +%s%N)
+#     rand_int=$(($num%$max+$min))
+#     return $rand_int
+# }
 
 set_wallpaper() {
     get_files
     max=${#files[@]}
-    get_rand 1 $max
-    file=${files[$?]}
+    num=$(python -c "import random;print(random.randint(1, $max))")
+    file=${files[$num]}
     path="$dir/$file"
     termux-wallpaper -f $path
 }

@@ -1,0 +1,78 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+"""TODO CLI
+Usage:
+  todo (list | l)
+  todo (add | a) <todo>
+  todo (del | d) <num>
+  todo -h | --help
+  todo -v | --version
+
+Subcommands:
+  add                 Add a new todo
+  done                Delete a completed todo
+  print               List todo
+
+Options:
+  -h, --help          Help information
+  -v, --version       Show version
+"""
+import json
+import os
+from docopt import docopt
+
+
+class Todo(object):
+    def __init__(self):
+        self._path = "/home/tunkshif/.local/share/todo/todo.json"
+        self.todo_list = self._load()
+        self.color_blue = "\033[1;34m"
+        self.color_reset = "\033[1;0m"
+
+    def _init(self):
+        is_file = os.path.isfile(self._path)
+        if not is_file:
+            with open(self._path, 'wt') as f:
+                data = {
+                    "id": "todo",
+                    "list": []
+                }
+                json.dump(data, f, indent=2)
+
+    def _load(self):
+        self._init()
+        with open(self._path) as f:
+            return json.load(f)
+
+    def _save(self):
+        with open(self._path, 'wt') as f:
+            json.dump(self.todo_list, f, indent=2)
+
+    def print(self):
+        num = 0
+        for item in self.todo_list["list"]:
+            print(f"{num}. {self.color_blue}{item}{self.color_reset}")
+            num += 1
+
+    def add(self, todo):
+        items = self.todo_list["list"]
+        items.append(todo)
+        self._save()
+        self.print()
+
+    def delete(self, num):
+        items = self.todo_list["list"]
+        del items[int(num)]
+        self._save()
+        self.print()
+
+
+if __name__ == '__main__':
+    args = docopt(__doc__, version="Todo 0.1")
+    todo = Todo()
+    if args['add'] or args['a']:
+        todo.add(args['<todo>'])
+    if args['del'] or args['d']:
+        todo.delete(args['<num>'])
+    if args['list'] or args['l']:
+        todo.print()
